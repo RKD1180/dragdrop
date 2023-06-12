@@ -1,0 +1,12 @@
+.todo{
+    background-color: #DAE2E6;
+}
+.doing{
+    background-color: #69c1ed;
+}
+.done{
+    background-color: #4bcba7;
+}
+.trash{
+    background-color: #ab3343;
+}
