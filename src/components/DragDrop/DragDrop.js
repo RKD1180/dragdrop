@@ -130,6 +130,7 @@ const DragDrop = () => {
             handleDragOver(e, "trash")
             setFrom("trash")
           }}
+          
           onDrop={(e) => handleTrashDrop(e, "trash")}
         >
           <Col className="trash p-2 text-center rounded">
