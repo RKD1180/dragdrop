@@ -26,6 +26,11 @@ const DragDrop = () => {
     setTodos(updatedTodos);
   };
 
+  const clearFromTrash = (stage) =>{
+    const clearTodos = todos.filter((todo) => todo.stage !== stage) 
+    setTodos(clearTodos);
+  }
+
   return (
     <Container>
       <Row>
@@ -128,6 +133,7 @@ const DragDrop = () => {
             <h3>Trash</h3>
           </Col>
           <Stage
+          clearFromTrash={clearFromTrash}
             todos={todos}
             handleDragStart={handleDragStart}
             title="Trash"
