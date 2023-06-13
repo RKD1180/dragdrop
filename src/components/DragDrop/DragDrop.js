@@ -1,48 +1,29 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./DragDrop.css";
-import TaskLists from "../TaskLists/TaskLists";
+import Stage from "../Stage/Stage";
 
 const DragDrop = () => {
   const [newTask, setNewTask] = useState("");
-  const [from, setFrom] = useState("")
-  const [todo, setTodo] = useState([]);
-  const [doing, setDoing] = useState([]);
-  const [done, setDone] = useState([]);
-  const [trash, setTrash] = useState([]);
+  const [todos, setTodos] = useState([]);
+
+  const handleDragStart = (event, taskId) => {
+    event.dataTransfer.setData("taskId", taskId);
+  };
 
   const handleDragOver = (event) => {
     event.preventDefault();
   };
 
-  const handleDragStart = (task) => {
-    return (event) => event.dataTransfer.setData("id", task);
-  };
-
-  const handleDoneDrop = (event,to) => {
-    console.log(from);
-    const data = event.dataTransfer.getData('id');
-    console.log(event);
-    setTodo((previous) => previous.filter((task) => task !== data));
-    setDone((previous) => [...previous, data]);
-  };
-
-  const handleTodoDrop = (event,to) => {
-    const data = event.dataTransfer.getData('id');
-    setDone((previous) => previous.filter((task) => task !== data));
-    setTodo((previous) => [...previous, data]);
-  };
-
-  const handleDoingDrop = (event,to) => {
-    const data = event.dataTransfer.getData('id');
-    setDone((previous) => previous.filter((task) => task !== data));
-    setTodo((previous) => [...previous, data]);
-  };
-
-  const handleTrashDrop = (event,to) => {
-    const data = event.dataTransfer.getData('id');
-    setDone((previous) => previous.filter((task) => task !== data));
-    setTodo((previous) => [...previous, data]);
+  const handleDrop = (event, targetStage) => {
+    const taskId = event.dataTransfer.getData("taskId");
+    const updatedTodos = todos.map((todo, id) => {
+      if (todo.id.toString() === taskId) {
+        return { ...todo, stage: targetStage };
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
   };
 
   return (
@@ -67,8 +48,16 @@ const DragDrop = () => {
             <Button
               variant="dark"
               onClick={() => {
+                console.log(todos);
                 setNewTask("");
-                setTodo([...todo, newTask]);
+                setTodos([
+                  ...todos,
+                  {
+                    task: newTask,
+                    stage: "Todo",
+                    id: Math.floor(Math.random() * 1000) + 1,
+                  },
+                ]);
               }}
             >
               Create
@@ -83,60 +72,67 @@ const DragDrop = () => {
         <Col
           md={3}
           className="border px-0 border-dark rounded"
-          onDragOver={(e)=>{
-            handleDragOver(e)
-          }}
-          onClick={()=>setFrom("todo")}
-          onDrop={(e) => handleTodoDrop(e, "todo")}
+          onDragOver={handleDragOver}
+          onDrop={(event) => handleDrop(event, "Todo")}
         >
           <Col className="todo p-2 text-center rounded">
             <h3>Todo</h3>
           </Col>
-          <TaskLists handleDragStart={handleDragStart} data={todo} />
+          <Stage
+            todos={todos}
+            handleDragStart={handleDragStart}
+            title="Todo"
+            stage="Todo"
+          />
         </Col>
+
         <Col
           md={3}
           className="border px-0 border-dark rounded"
-          onDragOver={(e)=>{
-            handleDragOver(e,"doing")
-           
-          }}
-          onClick={()=> setFrom("doing")}
-          onDrop={(e) => handleDoingDrop(e, "doing")}
+          onDragOver={handleDragOver}
+          onDrop={(event) => handleDrop(event, "Doing")}
         >
           <Col className="doing p-2 text-center rounded">
             <h3>Doing</h3>
           </Col>
-          <TaskLists handleDragStart={handleDragStart} data={doing} />
+          <Stage
+            todos={todos}
+            handleDragStart={handleDragStart}
+            title="Doing"
+            stage="Doing"
+          />
         </Col>
         <Col
           md={3}
           className="border px-0 border-dark rounded"
-          onDragOver={(e)=>{
-            handleDragOver(e, "done")
-            setFrom("done")
-          }}
-          onDrop={(e) => handleDoneDrop(e, "done")}
+          onDragOver={handleDragOver}
+          onDrop={(event) => handleDrop(event, "Done")}
         >
           <Col className="done p-2 text-center rounded">
             <h3>Done</h3>
           </Col>
-          <TaskLists handleDragStart={handleDragStart} data={done} />
+          <Stage
+            todos={todos}
+            handleDragStart={handleDragStart}
+            title="Done"
+            stage="Done"
+          />
         </Col>
         <Col
           md={3}
           className="border px-0 border-dark rounded"
-          onDragOver={(e)=>{
-            handleDragOver(e, "trash")
-            setFrom("trash")
-          }}
-          
-          onDrop={(e) => handleTrashDrop(e, "trash")}
+          onDragOver={handleDragOver}
+          onDrop={(event) => handleDrop(event, "Trash")}
         >
           <Col className="trash p-2 text-center rounded">
             <h3>Trash</h3>
           </Col>
-          <TaskLists handleDragStart={handleDragStart} data={trash} />
+          <Stage
+            todos={todos}
+            handleDragStart={handleDragStart}
+            title="Trash"
+            stage="Trash"
+          />
         </Col>
       </Row>
     </Container>

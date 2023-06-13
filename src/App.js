@@ -1,10 +1,10 @@
 
-import DragDrop from './components/DragDrop/DragDrop';
+import DragDropApp from './components/DragDrop/DragDrop';
 
 function App() {
   return (
     <>
-      <DragDrop/>
+      <DragDropApp/>
     </>
   );
 }
