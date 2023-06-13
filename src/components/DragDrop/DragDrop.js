@@ -5,7 +5,23 @@ import Stage from "../Stage/Stage";
 
 const DragDrop = () => {
   const [newTask, setNewTask] = useState("");
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState([
+    {
+      task: "SHopping",
+      stage: "Todo",
+      id: 1,
+    },
+    {
+      task: "New Task",
+      stage: "Todo",
+      id: 2,
+    },
+    {
+      task: "Make Website",
+      stage: "Todo",
+      id: 3,
+    },
+  ]);
 
   const handleDragStart = (event, taskId) => {
     event.dataTransfer.setData("taskId", taskId);
@@ -26,10 +42,10 @@ const DragDrop = () => {
     setTodos(updatedTodos);
   };
 
-  const clearFromTrash = (stage) =>{
-    const clearTodos = todos.filter((todo) => todo.stage !== stage) 
+  const clearFromTrash = (stage) => {
+    const clearTodos = todos.filter((todo) => todo.stage !== stage);
     setTodos(clearTodos);
-  }
+  };
 
   return (
     <Container>
@@ -59,7 +75,7 @@ const DragDrop = () => {
                   {
                     task: newTask,
                     stage: "Todo",
-                    id: Math.floor(Math.random() * 1000) + 1,
+                    id: Math.floor(Math.random() * (1000 - 10 + 1)) + 10,
                   },
                 ]);
               }}
@@ -132,7 +148,7 @@ const DragDrop = () => {
             <h3>Trash</h3>
           </Col>
           <Stage
-          clearFromTrash={clearFromTrash}
+            clearFromTrash={clearFromTrash}
             todos={todos}
             handleDragStart={handleDragStart}
             title="Trash"
