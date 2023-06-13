@@ -53,7 +53,6 @@ const DragDrop = () => {
             <Button
               variant="dark"
               onClick={() => {
-                console.log(todos);
                 setNewTask("");
                 setTodos([
                   ...todos,
